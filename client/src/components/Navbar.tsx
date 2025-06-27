@@ -8,7 +8,7 @@ type MenuLink = {
   path: string;
 };
 
-const Navbar = () => {
+const Navbar = ({ setShowLogin }: { setShowLogin: (show: boolean) => void }) => {
   const location = useLocation();
   const [open, setOpen] = useState<boolean>(false);
   const navigate= useNavigate()
@@ -38,7 +38,7 @@ const Navbar = () => {
         </div>
         <div className="flex max-sm:flex-col items-start sm:items-center gap-6">
           <button onClick={()=>navigate('/owner')} className="cursor-pointer">Dashboard</button>
-          <button className="cursor-pointer px-8 py-2 bg-primary hover:bg-primary-dull transition-all text-white rounded-lg ">Login</button>
+          <button onClick={()=>setShowLogin(true)} className="cursor-pointer px-8 py-2 bg-primary hover:bg-primary-dull transition-all text-white rounded-lg ">Login</button>
         </div>
       </div>
     </div>
