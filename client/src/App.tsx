@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const App = () => {
   const [showLogin, setShowLogin] = useState<boolean>(false);
-  const isOwnerPath = useLocation().pathname.startsWith("owner");
+  const isOwnerPath = useLocation().pathname.startsWith("/owner");
 
   return <>{!isOwnerPath && <Navbar setShowLogin={setShowLogin} />}</>;
 };
