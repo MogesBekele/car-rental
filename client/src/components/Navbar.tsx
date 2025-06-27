@@ -1,6 +1,6 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { assets, menuLinks } from "../assets/assets";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // Define the type for menuLinks if not already typed
 type MenuLink = {
@@ -11,6 +11,7 @@ type MenuLink = {
 const Navbar = () => {
   const location = useLocation();
   const [open, setOpen] = useState<boolean>(false);
+  const navigate= useNavigate()
 
   return (
     <div
@@ -31,6 +32,14 @@ const Navbar = () => {
             {link.name}
           </Link>
         ))}
+        <div className="hidden lg:flex items-center gap-2 border border-borderColor px-3 rounded-full max-w-56 ">
+          <input type="text" placeholder="search products" className="py-1.5 w-full bg-transparent outline-none placeholder:gray-500 " />
+          <img src={assets.search_icon} alt="search"  />
+        </div>
+        <div className="flex max-sm:flex-col items-start sm:items-center gap-6">
+          <button onClick={()=>navigate('/owner')} className="cursor-pointer">Dashboard</button>
+          <button className="cursor-pointer px-8 py-2 bg-primary hover:bg-primary-dull transition-all text-white rounded-lg ">Login</button>
+        </div>
       </div>
     </div>
   );
