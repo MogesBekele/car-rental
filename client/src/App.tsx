@@ -1,12 +1,12 @@
-import Navbar from './components/Navbar'
+import { useLocation } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import { useState } from "react";
 
 const App = () => {
-  return (
-    <div>
-        <Navbar/>
-    </div>
-  
-  )
-}
+  const [showLogin, setShowLogin] = useState<boolean>(false);
+  const isOwnerPath = useLocation().pathname.startsWith("owner");
 
-export default App
+  return <>{!isOwnerPath && <Navbar setShowLogin={setShowLogin} />}</>;
+};
+
+export default App;
