@@ -11,7 +11,8 @@ const App = () => {
   const [showLogin, setShowLogin] = useState<boolean>(false);
   const isOwnerPath = useLocation().pathname.startsWith("/owner");
 
-  return <>
+  return(
+   <>
   {!isOwnerPath && <Navbar setShowLogin={setShowLogin} />}
 
   <Routes>
@@ -22,7 +23,8 @@ const App = () => {
     {/* Add more routes as needed */}
 
   </Routes>
-  </>;
+  </>
+  )
 };
 
 export default App;
