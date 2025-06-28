@@ -1,6 +1,20 @@
 import { assets } from "../assets/assets";
 
-const CarCard = ({ car }) => {
+type Car = {
+  image: string;
+  isAvailable: boolean;
+  pricePerDay: number;
+  brand: string;
+  model: string;
+  category: string;
+  year: number;
+  seating_capacity: number;
+  fuel_type: string;
+  transmission: string;
+  location: string;
+};
+
+const CarCard = ({ car }: { car: Car }) => {
   const currency = import.meta.env.VITE_CURRENCY;
   return (
     <div className="group rounded-xl overflow-hidden shadow-lg hover:-translate-y-1 transition-all duration-500 cursor-pointer">
@@ -11,12 +25,12 @@ const CarCard = ({ car }) => {
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         {car.isAvailable && (
-          <p className="absolute top-4 left-4 bh-primary/90 text-white text-xs px-2.5 rounded-full">
+          <p className="absolute top-4 left-4 bg-primary/90 text-white text-xs px-2.5 rounded-full">
             Available Now
           </p>
         )}
         <div className="absolute bottom-4 right-4 bg-black/80 backdrop-blur-sm text-white px-3 py-2 rounded-lg">
-          <span className=" **:font-semibold">
+          <span className="font-semibold">
             {currency}
             {car.pricePerDay}{" "}
           </span>
@@ -28,8 +42,7 @@ const CarCard = ({ car }) => {
         <div className="flex justify-between items-start mb-2">
           <div>
             <h3 className="text-lg font-medium">
-              {car.brand}
-              {car.model}
+              {car.brand} {car.model}
             </h3>
             <p className="text-muted-foreground text-sm">
               {car.category}.{car.year}
@@ -47,9 +60,9 @@ const CarCard = ({ car }) => {
           </div>
           <div className="flex items-center text-sm text-muted-foreground">
             <img src={assets.car_icon} alt="" className="h-4 mr-2" />
-            <span>{car.trasmission}</span>
+            <span>{car.transmission}</span>
           </div>
-            <div className="flex items-center text-sm text-muted-foreground">
+          <div className="flex items-center text-sm text-muted-foreground">
             <img src={assets.location_icon} alt="" className="h-4 mr-2" />
             <span>{car.location}</span>
           </div>
