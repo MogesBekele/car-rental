@@ -14,7 +14,11 @@ type Car = {
   location: string;
 };
 
-const CarCard = ({ car }: { car: Car }) => {
+type CarCardProps = {
+  car: Car;
+};
+
+const CarCard = ({ car }: CarCardProps) => {
   const currency = import.meta.env.VITE_CURRENCY;
   return (
     <div className="group rounded-xl overflow-hidden shadow-lg hover:-translate-y-1 transition-all duration-500 cursor-pointer">
