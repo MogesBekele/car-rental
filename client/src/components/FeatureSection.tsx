@@ -9,7 +9,7 @@ const FeatureSection = () => {
   return (
     <div className="flex flex-col items-center py-24 px-6 md:px-16 lg:px-24 xl:px-32">
       <div>
-        <Title title="Features Vehicles" subTitle="Explore our selection of premium vehicles available for your next adventure"/>
+        <Title title="Features Vehicles" subTitle="Explore our selection of premium vehicles available for your next adventure " />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-18">
 
