@@ -1,6 +1,8 @@
 import { assets } from "../assets/assets";
 
-type Car = {
+export type Car = {
+  _id: string;
+  owner: string;
   image: string;
   isAvailable: boolean;
   pricePerDay: number;
@@ -12,8 +14,9 @@ type Car = {
   fuel_type: string;
   transmission: string;
   location: string;
+  description: string;
+  createdAt: string;
 };
-
 type CarCardProps = {
   car: Car;
 };
