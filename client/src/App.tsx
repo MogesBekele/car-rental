@@ -14,18 +14,14 @@ const App = () => {
   return (
     <>
       {!isOwnerPath && <Navbar setShowLogin={setShowLogin} />}
-      <div
-        className="pt-24 bg-light
-"
-      >
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/car-details/:id" element={<CarDetails />} />
-          <Route path="/cars" element={<Cars />} />
-          <Route path="/my-bookings" element={<MyBookings />} />
-          {/* Add more routes as needed */}
-        </Routes>
-      </div>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/car-details/:id" element={<CarDetails />} />
+        <Route path="/cars" element={<Cars />} />
+        <Route path="/my-bookings" element={<MyBookings />} />
+        {/* Add more routes as needed */}
+      </Routes>
     </>
   );
 };
