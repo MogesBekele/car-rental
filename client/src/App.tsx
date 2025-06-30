@@ -23,7 +23,7 @@ const App = () => {
         <Route path="/my-bookings" element={<MyBookings />} />
         {/* Add more routes as needed */}
       </Routes>
-      <Footer/>
+     {!isOwnerPath && <Footer />}
     </>
   );
 };
