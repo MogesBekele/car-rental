@@ -1,5 +1,22 @@
 import { assets } from "../assets/assets";
 
+
+//const socialLinks = [
+//   { href: "#", src: assets.facebook_logo, alt: "facebook" },
+//   { href: "#", src: assets.instagram_logo, alt: "instagram" },
+//   { href: "#", src: assets.twitter_logo, alt: "twitter" },
+//   { href: "#", src: assets.gmail_logo, alt: "email" },
+// ];
+
+// // In your JSX:
+// <div className="flex items-center gap-3 mt-6">
+//   {socialLinks.map((link) => (
+//     <a href={link.href} key={link.alt}>
+//       <img src={link.src} alt={link.alt} className="w-5 h-5" />
+//     </a>
+//   ))}
+// </div>
+
 const Footer = () => {
   return (
     <div className="px-6 md:px-16 lg:px-24 xl:px-32 mt-60 text-sm text-gray-500 ">

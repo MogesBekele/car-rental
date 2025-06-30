@@ -1,8 +1,17 @@
 import { assets } from "../assets/assets";
 import Title from "./Title";
 
+// 1. Define the type
+type Testimonial = {
+  name: string;
+  location: string;
+  image: string;
+  testimonail: string;
+};
+
 const Testimonail = () => {
-  const testimonials = [
+  // 2. Type the array
+  const testimonials: Testimonial[] = [
     {
       name: "Yasin Hassen",
       location: "Addis Ababa, Ethiopia",
@@ -37,7 +46,7 @@ const Testimonail = () => {
         {testimonials.map((testimonial, index) => (
           <div
             key={index}
-            className="bg-white p-6 rounded-xl shadow-lg hover:traslate-y-1  duration-300"
+            className="bg-white p-6 rounded-xl shadow-lg hover:translate-y-1 duration-300"
           >
             <div className="flex items-center gap-3">
               <img
@@ -46,15 +55,15 @@ const Testimonail = () => {
                 alt={testimonial.name}
               />
               <div>
-                <p className=" text-xl">{testimonial.name}</p>
+                <p className="text-xl">{testimonial.name}</p>
                 <p className="text-gray-500">{testimonial.location}</p>
               </div>
             </div>
             <div className="flex items-center gap-1 mt-4">
               {Array(5)
                 .fill(0)
-                .map((_, index) => (
-                <img key={index} src={assets.star_icon} alt="star-icon" />
+                .map((_, idx) => (
+                  <img key={idx} src={assets.star_icon} alt="star-icon" />
                 ))}
             </div>
             <p className="text-gray-500 max-w-90 mt-4">
