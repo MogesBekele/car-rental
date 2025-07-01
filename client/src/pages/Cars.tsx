@@ -1,14 +1,16 @@
-import { Link } from "react-router-dom"
+
+import Title from "../components/Title"
 
 
 const Cars = () => {
   return (
     <div>
-      <h1>Available Cars</h1>
-      <p>Explore our collection of cars available for rent.</p>
-      {/* Add more content or components as needed */}
-      <Link to={"/car-details/:id"}>car detail</Link>
+      <div className="flex flex-col items-center py-20 bg-light max-md:px-4">
+        <Title title="Available Cars" subTitle=" Check out our selection of premium vehicles available for your next adventure"/>
+      </div>
+      <div></div>
       
+     
     </div>
   )
 }
