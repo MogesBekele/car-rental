@@ -16,9 +16,13 @@ const CarDetails = () => {
     alert("Booking successful!");
   };
 
-  useEffect(() => {
+useEffect(() => {
+  const timer = setTimeout(() => {
     setCar(dummyCarData.find((c) => c._id === id) || null);
-  }, [id]);
+  }, 1200); // 1.2 seconds delay to show loading
+
+  return () => clearTimeout(timer);
+}, [id]);
 
   return car ? (
     <div className="px-6 md:px-16 lg:px-24 xl:px-32 mt-16">
