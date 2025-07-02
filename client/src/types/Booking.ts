@@ -11,3 +11,4 @@ export type Booking = {
   price: number;
   createdAt: string;
 };
+
