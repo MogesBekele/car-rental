@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
-import type { CarCardProps } from "../types/DataType";
+import type { Car } from "../types/DataType";
+
+export type CarCardProps = {
+  car: Car;
+};
 
 const CarCard = ({ car }: CarCardProps) => {
   const currency = import.meta.env.VITE_CURRENCY;

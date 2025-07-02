@@ -1,10 +1,12 @@
+import AddCar from "./AddCar"
 
-import AddCar from './AddCar'
+
 
 const Layout = () => {
   return (
     <div>
       <AddCar/>
+    
       
     </div>
   )

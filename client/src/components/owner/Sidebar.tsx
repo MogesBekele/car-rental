@@ -1,9 +1,10 @@
+import NavbarOwner from "./NavbarOwner"
 
 
 const Sidebar = () => {
   return (
     <div>
-      
+      <NavbarOwner/>
     </div>
   )
 }
