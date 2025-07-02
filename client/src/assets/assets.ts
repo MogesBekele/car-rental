@@ -1,4 +1,5 @@
 import type { Car } from "../components/CarCard";
+import type { Booking } from "../types/Booking"; 
 import logo from "./logo.svg";
 import gmail_logo from "./gmail_logo.svg";
 import facebook_logo from "./facebook_logo.svg";
@@ -180,7 +181,7 @@ export const dummyCarData: Car[] = [
     }
 ];
 
-export const dummyMyBookingsData = [
+export const dummyMyBookingsData: Booking[] = [
     {
         "_id": "68482bcc98eb9722b7751f70",
         "car": dummyCarData[0],
