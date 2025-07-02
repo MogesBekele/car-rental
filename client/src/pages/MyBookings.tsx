@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { dummyMyBookingsData } from "../assets/assets";
 import Title from "../components/Title";
-import type { Booking } from "../types/Booking"; // Import the Booking type
+import type { Booking } from "../types/DataType"; // Import the Booking type
 
 // Define types
 

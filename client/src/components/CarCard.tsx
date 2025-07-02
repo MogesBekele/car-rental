@@ -1,32 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
-
-export type Car = {
-  _id: string;
-  owner: string;
-  image: string;
-  isAvailable: boolean;
-  pricePerDay: number;
-  brand: string;
-  model: string;
-  category: string;
-  year: number;
-  seating_capacity: number;
-  fuel_type: string;
-  transmission: string;
-  location: string;
-  description: string;
-  createdAt: string;
-};
-type CarCardProps = {
-  car: Car;
-};
+import type { CarCardProps } from "../types/DataType";
 
 const CarCard = ({ car }: CarCardProps) => {
   const currency = import.meta.env.VITE_CURRENCY;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
-    <div onClick={()=>{navigate(`/car-details/${car._id}`);scrollTo(0,0)} }className="group rounded-xl overflow-hidden shadow-lg hover:-translate-y-1 transition-all duration-500 cursor-pointer">
+    <div
+      onClick={() => {
+        navigate(`/car-details/${car._id}`);
+        scrollTo(0, 0);
+      }}
+      className="group rounded-xl overflow-hidden shadow-lg hover:-translate-y-1 transition-all duration-500 cursor-pointer"
+    >
       <div className="relative h-48 overflow-hidden">
         <img
           src={car.image}
