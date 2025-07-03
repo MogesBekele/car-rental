@@ -18,13 +18,14 @@ const Sidebar = () => {
     <div className="relative min-h-screen md:flex flex-col items-center pt-8 max-w-13 md:max-w-60 border-r border-borderColor text-sm">
       <div className="group relative">
         <label htmlFor="image">
-          <img
+          <img className="h-9 md:h-14 w-9 md:w-14 rounded-full mx-auto"
             src={image ? URL.createObjectURL(image) : user?.image}
             alt=""
           />
           <input
             type="file"
             accept="image/*"
+            id="image"
             hidden
             onChange={(e) => setImage(e.target.files?.[0] || null)}
           />
