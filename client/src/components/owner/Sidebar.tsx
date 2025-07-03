@@ -66,7 +66,7 @@ const Sidebar = () => {
             <div
               className={`${
                 link.path === location.pathname &&
-                "bg-primary h-8 w-1.5 rounded-l right-0 absolute "
+                "bg-primary h-8 w-1 rounded-l right-0 absolute "
               }`}
             ></div>
           </NavLink>
