@@ -27,3 +27,21 @@ export type Booking = {
   price: number;
   createdAt: string;
 };
+
+export type RecentBooking = {
+  car: {
+    brand: string;
+    model: string;
+  };
+  createdAt: string;
+  price: number;
+  status: string;
+};
+export type DashboardData = {
+  totalCars: number;
+  totalBookings: number;
+  pendingBookings: number;
+  completedBookings: number;
+  recentBookings: RecentBooking[];
+  monthlyRevenue: number;
+};

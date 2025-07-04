@@ -1,16 +1,10 @@
 import { useEffect, useState } from "react";
 import { assets, dummyDashboardData } from "../../assets/assets";
 import Title from "../../components/owner/Title";
+import type { DashboardData } from "../../types/DataType";
 
 // 1. Define the type
-type DashboardData = {
-  totalCars: number;
-  totalBookings: number;
-  pendingBookings: number;
-  completedBookings: number;
-  recentBookings: any[]; // Replace 'any' with a proper type if you have one
-  monthlyRevenue: number;
-};
+
 type Card = {
   title: string;
   value: number;
