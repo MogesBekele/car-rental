@@ -2,10 +2,24 @@ import { useState } from "react";
 import Title from "../../components/owner/Title";
 import { assets } from "../../assets/assets";
 
+
+type CarDetails = {
+  brand: string;
+  model: string;
+  year: number;
+  pricePerDay: number;
+  category: string;
+  transmission: string;
+  fuel_type: string;
+  seating_capacity: number;
+  location: string;
+  description: string;
+  
+}
 const AddCar = () => {
   const [image, setImage] = useState<File | null>(null);
   const currency = import.meta.env.VITE_CURRENCY;
-  const [car, setCar] = useState({
+  const [car, setCar] = useState<CarDetails>({
     brand: "",
     model: "",
     year: 0,
