@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { dummyCarData } from "../../assets/assets";
+import { assets, dummyCarData } from "../../assets/assets";
 import type { Car } from "../../types/DataType";
 import Title from "../../components/owner/Title";
 
 const ManageCars = () => {
   const [cars, setCars] = useState<Car[]>([]);
+  const currency = import.meta.env.VITE_CURRENCY;
 
   const fetchOwerCars = async () => {
     setCars(dummyCarData);
@@ -23,13 +24,44 @@ const ManageCars = () => {
           <thead className="text-gray-500">
             <tr>
               <th className="p-3 font-medium">Car</th>
-              <th className="p-3 font-medium">Category</th>
+              <th className="p-3 font-medium max-md:hidden">Category</th>
               <th className="p-3 font-medium">Price</th>
-              <th className="p-3 font-medium">Status</th>
-              <th className="p-3 font-medium">Actionr</th>
+              <th className="p-3 font-medium max-md:hidden">Status</th>
+              <th className="p-3 font-medium">Actions</th>
             </tr>
           </thead>
-          
+          <tbody>
+            {cars.map((car, index) => (
+              <tr key={index} className="border-t border-borderColor">
+                <td className="p-3 flex items-center gap-3">
+                  <img
+                    src={car.image}
+                    alt=""
+                    className="w-12 h-12 aspect-square rounded-md object-cover"
+                  />
+                  <div className="max-md:hidden">
+                    <p className="font-medium">
+                      {car.brand} {car.model}
+                    </p>
+                    <p className="text-gray-500 text-sm">
+                      {car.seating_capacity} . {car.transmission}
+                    </p>
+                  </div>
+                </td>
+                <td className="p-3 max-md:hidden">{car.category}</td>
+                <td className="p-3">{currency}{car.pricePerDay}/day</td>
+                <td className="p-3 max-md:hidden">
+                  <span className={`px-3 py-1 rounded-full ${car.isAvailable ? "bg-green-100 text-green-500" : "bg-red-100 text-red-500"}`}>{car.isAvailable ? "Available" : "Unavailable"}</span>
+                </td>
+                <td className="p-3 flex items-center">
+                <img src={car.isAvailable? assets.eye_close_icon:assets.eye_icon} alt="" className="cursor-pointer" />
+                <img src={assets.delete_icon} alt="" className="cursor-pointer" />
+                </td>
+                  
+                
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
     </div>

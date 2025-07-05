@@ -201,7 +201,7 @@ export const dummyCarData: Car[] = [
     location: "Houston",
     description:
       "This is a mid-size luxury sedan produced by Toyota. The Corolla made its debut in 2008 as the first sedan ever produced by Toyota.",
-    isAvailable: true,
+    isAvailable: false,
     createdAt: "2025-04-17T06:15:47.318Z",
   },
 ];
