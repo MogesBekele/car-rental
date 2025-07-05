@@ -1,6 +1,6 @@
 import type { Car } from "../types/DataType";
 import type { Booking } from "../types/DataType";
-import type {DashboardData} from '../types/DataType'
+import type { DashboardData } from "../types/DataType";
 import logo from "./logo.svg";
 import gmail_logo from "./gmail_logo.svg";
 import facebook_logo from "./facebook_logo.svg";
@@ -258,7 +258,7 @@ export const dummyDashboardData: DashboardData = {
   totalBookings: 2,
   pendingBookings: 0,
   completedBookings: 2,
-  recentBookings: [dummyMyBookingsData[0], dummyMyBookingsData[1]].map(b => ({
+  recentBookings: [dummyMyBookingsData[0], dummyMyBookingsData[1]].map((b) => ({
     car: {
       brand: b.car.brand,
       model: b.car.model,
