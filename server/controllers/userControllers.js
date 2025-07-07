@@ -13,15 +13,21 @@ const registerUser = async (req, res) => {
   try {
     const exists = await userModel.findOne({ email });
     if (exists) {
-      return res.status(400).json({ success: false, message: "User already exists" });
+      return res
+        .status(400)
+        .json({ success: false, message: "User already exists" });
     }
 
     if (!validator.isEmail(email)) {
-      return res.status(400).json({ success: false, message: "Please enter a valid email" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Please enter a valid email" });
     }
 
     if (password.length < 8) {
-      return res.status(400).json({ success: false, message: "Please enter a strong password" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Please enter a strong password" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -42,12 +48,16 @@ const loginUser = async (req, res) => {
   try {
     const user = await userModel.findOne({ email });
     if (!user?.password) {
-      return res.status(400).json({ success: false, message: "Invalid credentials" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid credentials" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ success: false, message: "Invalid credentials" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid password" });
     }
 
     const token = createToken(user._id.toString());
