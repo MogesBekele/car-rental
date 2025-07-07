@@ -6,9 +6,43 @@ const Login = ({ setShowLogin }: { setShowLogin: (show: boolean) => void }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  const url =
+    state === "register"
+      ? "http://localhost:3000/api/user/register"
+      : "http://localhost:3000/api/user/login";
+
+  const payload =
+    state === "register"
+      ? { name, email, password }
+      : { email, password };
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      alert("Success!");
+      localStorage.setItem("token", data.token); // store JWT if needed
+      setShowLogin(false);
+    } else {
+      alert(data.message || "Something went wrong");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Server error");
   }
+};
+
   return (
     <div onClick={()=>{setShowLogin(false)}}  className="fixed top-0 left-0 right-0 bottom-0 z-100 flex items-center text-sm text-gray-500 bg-black/50">
         <form onSubmit={onSubmitHandler} onClick={ (e) => e.stopPropagation()} className="flex flex-col gap-4 m-auto items-start p-8 py-12 w-80 sm:w-[352px] rounded-lg shadow-xl border border-gray-200 bg-white">
