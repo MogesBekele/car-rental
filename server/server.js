@@ -14,7 +14,6 @@ app.use(cors());
 app.use(express.json());
 
 //routes
-
 app.use("/api/user", userRouter);
 
 app.get("/", (req, res) => {
