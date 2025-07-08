@@ -1,10 +1,11 @@
+// models/carModel.js
 import mongoose from "mongoose";
 
 const carSchema = new mongoose.Schema(
   {
     brand: { type: String, required: true },
     model: { type: String, required: true },
-    image: { type: String, required: true }, // store filename or URL
+    image: { type: String, required: true }, // URL or filename
     year: { type: Number, required: true },
     category: { type: String, required: true },
     seating_capacity: { type: Number, required: true },
@@ -13,7 +14,6 @@ const carSchema = new mongoose.Schema(
     pricePerDay: { type: Number, required: true },
     location: { type: String, required: true },
     description: { type: String, required: true },
-    isAvailable: { type: Boolean, default: true },
   },
   {
     timestamps: true, // adds createdAt and updatedAt
