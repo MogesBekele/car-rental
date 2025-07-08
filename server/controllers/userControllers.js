@@ -61,7 +61,7 @@ const loginUser = async (req, res) => {
     }
 
     const token = createToken(user._id.toString());
-    
+
     return res.json({ success: true, token });
   } catch (error) {
     console.error(error);
@@ -71,8 +71,8 @@ const loginUser = async (req, res) => {
 
 const getUserData = async (req, res) => {
   try {
-    const user = await userModel.findById(req.user.id);
-    return res.json({ success: true, user });
+    const { user } = req;
+    res.json({ success: true, user });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: "Server error" });
