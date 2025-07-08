@@ -8,20 +8,18 @@ import userRouter from "./routes/userRoutes.js";
 const app = express();
 
 //database connection
-await connectDB();
+connectDB();
 //middleware
 app.use(cors());
 app.use(express.json());
 
 //routes
+
 app.use("/api/user", userRouter);
-
-
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
-
 
 const PORT = process.env.PORT || 3000;
 

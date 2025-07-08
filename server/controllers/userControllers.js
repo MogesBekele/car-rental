@@ -61,7 +61,7 @@ const loginUser = async (req, res) => {
     }
 
     const token = createToken(user._id.toString());
-    console.log(token);
+    
     return res.json({ success: true, token });
   } catch (error) {
     console.error(error);
@@ -69,4 +69,14 @@ const loginUser = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser };
+const getUserData = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user.id);
+    return res.json({ success: true, user });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export { registerUser, loginUser, getUserData };
