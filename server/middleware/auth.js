@@ -13,10 +13,10 @@ export const protect = async (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    // ✅ Securely verify the token
+    // Securely verify the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // ✅ Get user by ID from payload
+    // Get user by ID from payload
     const user = await userModel.findById(decoded.id).select("-password");
 
     if (!user) {
