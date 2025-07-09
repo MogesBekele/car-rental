@@ -79,4 +79,6 @@ const getUserData = async (req, res) => {
   }
 };
 
+
+
 export { registerUser, loginUser, getUserData };
