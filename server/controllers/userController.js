@@ -1,7 +1,7 @@
-import userModel from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import validator from "validator";
+import User from "../models/userModel.js";
 
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET);
@@ -11,7 +11,7 @@ const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    const exists = await userModel.findOne({ email });
+    const exists = await User.findOne({ email });
     if (exists) {
       return res
         .status(400)
@@ -31,7 +31,7 @@ const registerUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new userModel({ name, email, password: hashedPassword });
+    const newUser = new User({ name, email, password: hashedPassword });
     const user = await newUser.save();
 
     const token = createToken(user._id.toString());
@@ -46,7 +46,7 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await userModel.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user?.password) {
       return res
         .status(400)
@@ -78,7 +78,5 @@ const getUserData = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
-
 
 export { registerUser, loginUser, getUserData };
