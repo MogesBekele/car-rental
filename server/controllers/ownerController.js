@@ -17,9 +17,17 @@ export const changeRoleToOwner = async (req, res) => {
 // api to list cars
 export const addCar = async (req, res) => {
   try {
-    const { _id } = req.User;
+    const { _id } = req.user;
     let car = JSON.parse(req.body.carData);
     const imageFile = req.file;
+    console.log("req.file:", req.file);
+    console.log("req.body:", req.body);
+
+    if (!imageFile) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Image file is missing" });
+    }
     const fileBuffer = fs.readFileSync(imageFile.path);
     const response = await imagekit.upload({
       file: fileBuffer,
@@ -48,6 +56,6 @@ export const addCar = async (req, res) => {
     res.json({ success: true, message: "Car added successfully" });
   } catch (error) {
     console.log(error.message);
-    res.json({ success: true, message: error.message });
+    res.json({ success: false, message: error.message });
   }
 };
