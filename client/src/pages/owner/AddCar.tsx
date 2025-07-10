@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Title from "../../components/owner/Title";
 import { assets } from "../../assets/assets";
-
+import axios from "axios";
 
 type CarDetails = {
   brand: string;
@@ -14,11 +14,11 @@ type CarDetails = {
   seating_capacity: number;
   location: string;
   description: string;
-  
-}
+};
+
 const AddCar = () => {
   const [image, setImage] = useState<File | null>(null);
-  const currency = import.meta.env.VITE_CURRENCY;
+  const currency = import.meta.env.VITE_CURRENCY || "$";
   const [car, setCar] = useState<CarDetails>({
     brand: "",
     model: "",
@@ -31,26 +31,86 @@ const AddCar = () => {
     location: "",
     description: "",
   });
-  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!image) {
+      alert("Please upload a car image.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setSuccessMessage(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("image", image);
+
+      // Append all car details
+      formData.append("carData", JSON.stringify(car));
+
+      const token = localStorage.getItem("token");
+
+      const response = await axios.post(
+        "http://localhost:3000/api/owner/add-Car",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setSuccessMessage("Car listed successfully!");
+      setCar({
+        brand: "",
+        model: "",
+        year: 0,
+        pricePerDay: 0,
+        category: "",
+        transmission: "",
+        fuel_type: "",
+        seating_capacity: 0,
+        location: "",
+        description: "",
+      });
+      setImage(null);
+      console.log("Response:", response.data);
+    } catch (error: any) {
+      setError(
+        error.response?.data?.message || "Failed to list car. Try again."
+      );
+      console.error("Error listing car:", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
   return (
-    <div className="px-4 py-10 md:px-10 flex-1">
+    <div className="px-4 py-10 md:px-10 flex-1 max-w-xl mx-auto">
       <Title
         title="Add New Car"
         subTitle="Fill in details to list a new car booking, including pricing, availability and specifications."
       />
+
       <form
         onSubmit={onSubmitHandler}
-        className="flex flex-col gap-5 text-gray-500 text-sm mt-6 max-w-xl"
+        className="flex flex-col gap-5 text-gray-500 text-sm mt-6"
       >
-        {/* {/* image input */}
+        {/* Image input */}
         <div className="flex items-center gap-2 w-full">
-          <label htmlFor="car-image">
+          <label htmlFor="car-image" className="cursor-pointer">
             <img
               src={image ? URL.createObjectURL(image) : assets.upload_icon}
-              alt=""
-              className="h-14 rounded cursor-pointer"
+              alt="Car upload"
+              className="h-14 rounded border border-gray-300"
             />
             <input
               type="file"
@@ -58,49 +118,55 @@ const AddCar = () => {
               accept="image/*"
               hidden
               onChange={(e) => setImage(e.target.files?.[0] || null)}
+              required
             />
           </label>
           <p className="text-sm text-gray-500">Upload car image</p>
         </div>
-        {/* car details */}
+
+        {/* Car details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col">
             <label>Brand</label>
             <input
               type="text"
               value={car.brand}
               onChange={(e) => setCar({ ...car, brand: e.target.value })}
-              className="border border-borderColor rounded-md px-3 py-2 mt-1 outline-none"
               placeholder="Enter car brand"
+              className="border border-borderColor rounded-md px-3 py-2 mt-1 outline-none"
               required
             />
           </div>
-          <div className="flex flex-col w-full">
+
+          <div className="flex flex-col">
             <label>Model</label>
             <input
               type="text"
               value={car.model}
               onChange={(e) => setCar({ ...car, model: e.target.value })}
-              className="border border-borderColor rounded-md px-3 py-2 mt-1 outline-none"
               placeholder="Enter car model"
+              className="border border-borderColor rounded-md px-3 py-2 mt-1 outline-none"
               required
             />
           </div>
         </div>
-        {/* {/* car year price category */}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col">
             <label>Year</label>
             <input
               type="number"
               value={car.year}
               onChange={(e) => setCar({ ...car, year: Number(e.target.value) })}
-              className="border border-borderColor rounded-md px-3 py-2 mt-1 outline-none"
               placeholder="2025"
+              className="border border-borderColor rounded-md px-3 py-2 mt-1 outline-none"
               required
+              min={1900}
+              max={new Date().getFullYear() + 1}
             />
           </div>
-          <div className="flex flex-col w-full">
+
+          <div className="flex flex-col">
             <label>Daily Price {currency}</label>
             <input
               type="number"
@@ -108,33 +174,37 @@ const AddCar = () => {
               onChange={(e) =>
                 setCar({ ...car, pricePerDay: Number(e.target.value) })
               }
-              className="border border-borderColor rounded-md px-3 py-2 mt-1 outline-none"
               placeholder="200"
+              className="border border-borderColor rounded-md px-3 py-2 mt-1 outline-none"
               required
+              min={0}
             />
           </div>
-          <div className="flex flex-col w-full">
+
+          <div className="flex flex-col">
             <label>Category</label>
             <select
               value={car.category}
               onChange={(e) => setCar({ ...car, category: e.target.value })}
-              className="px-3 mt-1 border border-borderColor rounded-md outline-none "
+              className="border border-borderColor rounded-md px-3 py-2 mt-1 outline-none"
+              required
             >
               <option value="">Select Category</option>
               <option value="luxury">Luxury</option>
-              <option value="sedan">sedan</option>
+              <option value="sedan">Sedan</option>
               <option value="SUV">SUV</option>
             </select>
           </div>
         </div>
-        {/* transmission, fuel type, seating capacity */}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col">
             <label>Transmission</label>
             <select
               value={car.transmission}
               onChange={(e) => setCar({ ...car, transmission: e.target.value })}
-              className="px-3 mt-1 border border-borderColor rounded-md outline-none "
+              className="border border-borderColor rounded-md px-3 py-2 mt-1 outline-none"
+              required
             >
               <option value="">Select Transmission</option>
               <option value="Automatic">Automatic</option>
@@ -142,12 +212,14 @@ const AddCar = () => {
               <option value="Semi-Automatic">Semi-Automatic</option>
             </select>
           </div>
-          <div className="flex flex-col w-full">
+
+          <div className="flex flex-col">
             <label>Fuel Type</label>
             <select
               value={car.fuel_type}
               onChange={(e) => setCar({ ...car, fuel_type: e.target.value })}
-              className="px-3 mt-1 border border-borderColor rounded-md outline-none "
+              className="border border-borderColor rounded-md px-3 py-2 mt-1 outline-none"
+              required
             >
               <option value="">Select Fuel Type</option>
               <option value="Gas">Gas</option>
@@ -156,7 +228,8 @@ const AddCar = () => {
               <option value="Electric">Electric</option>
             </select>
           </div>
-          <div className="flex flex-col w-full">
+
+          <div className="flex flex-col">
             <label>Seating Capacity</label>
             <input
               type="number"
@@ -164,19 +237,21 @@ const AddCar = () => {
               onChange={(e) =>
                 setCar({ ...car, seating_capacity: Number(e.target.value) })
               }
-              className="border border-borderColor rounded-md px-3 py-2 mt-1 outline-none"
               placeholder="4"
+              className="border border-borderColor rounded-md px-3 py-2 mt-1 outline-none"
               required
+              min={1}
             />
           </div>
         </div>
-        {/* {car location} */}
-        <div className="flex flex-col w-full">
+
+        <div className="flex flex-col">
           <label>Location</label>
           <select
             value={car.location}
             onChange={(e) => setCar({ ...car, location: e.target.value })}
-            className="px-3 mt-1 border border-borderColor rounded-md outline-none "
+            className="border border-borderColor rounded-md px-3 py-2 mt-1 outline-none"
+            required
           >
             <option value="">Select a Location</option>
             <option value="Addis Ababa">Addis Ababa</option>
@@ -185,20 +260,31 @@ const AddCar = () => {
             <option value="Bahrdar">Bahrdar</option>
           </select>
         </div>
-        {/* {car description} */}
-        <div className="flex flex-col w-full">
+
+        <div className="flex flex-col">
           <label>Description</label>
-          <textarea rows={5}
+          <textarea
+            rows={5}
             value={car.description}
             onChange={(e) => setCar({ ...car, description: e.target.value })}
+            placeholder="e.g. luxurious car for rent"
             className="border border-borderColor rounded-md px-3 py-2 mt-1 outline-none"
-            placeholder="e.g luxurious car for rent"
             required
-          ></textarea>
+          />
         </div>
-        <button type="submit" className="flex items-center gap-2 px-4 py-2.5 mt-4 bg-primary text-white w-max rounded-md font-medium cursor-pointer">
-          <img src={assets.tick_icon} alt="" />
-          List Your Car
+
+        {error && <p className="text-red-600">{error}</p>}
+        {successMessage && <p className="text-green-600">{successMessage}</p>}
+
+        <button
+          type="submit"
+          className={`flex items-center gap-2 px-4 py-2.5 mt-4 bg-primary text-white w-max rounded-md font-medium cursor-pointer ${
+            loading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          disabled={loading}
+        >
+          <img src={assets.tick_icon} alt="tick" />
+          {loading ? "Listing..." : "List Your Car"}
         </button>
       </form>
     </div>
