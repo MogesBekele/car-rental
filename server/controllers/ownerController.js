@@ -7,7 +7,7 @@ export const changeRoleToOwner = async (req, res) => {
   try {
     const { _id } = req.user;
     await User.findByIdAndUpdate(_id, { role: "owner" });
-    res.json({ success: true, message: "now you can list cars" });
+    res.json({ success: true, message: "now you can control the dashboard" });
   } catch (error) {
     console.log(error.message);
     res.json({ success: true, message: error.message });
@@ -60,16 +60,71 @@ export const addCar = async (req, res) => {
   }
 };
 
-
-export const getOwnerCars = async (req, res)=>{
+export const getOwnerCars = async (req, res) => {
   try {
     const { _id } = req.user;
     const cars = await Car.find({ owner: _id });
     res.json({ success: true, cars });
-    
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
-    
   }
-}
+};
+
+//api to toggle car availablity
+
+export const toggleCarAvailability = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const { carId } = req.body;
+    const car = await Car.findById(carId);
+    if (car.owner.toString() !== _id.toString()) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    car.available = !car.available;
+    await car.save();
+    res.json({
+      success: true,
+      message: "Car availability toggled successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// api to delete the car
+
+export const deleteCar = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const { carId } = req.body;
+    const car = await Car.findById(carId);
+
+    if (car.owner.toString() !== _id.toString()) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    car.owner = null;
+    car.available = false;
+    await car.save();
+    res.json({ success: true, message: "Car removed" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// api to get dashboard data
+
+export const getDashboardData = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    if (role !== "owner") {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    const cars = await Car.find({ owner: _id });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
