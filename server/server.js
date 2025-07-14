@@ -4,6 +4,7 @@ import "dotenv/config";
 import connectDB from "./config/db.js";
 import userRouter from "./routes/userRoutes.js";
 import ownerRouter from "./routes/ownerRoutes.js";
+import bookingRouter from "./routes/bookingRoutes.js";
 
 //initialize express
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json());
 //routes
 app.use("/api/user", userRouter);
 app.use('/api/owner', ownerRouter )
+app.use('/api/booking', bookingRouter)
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
