@@ -2,6 +2,7 @@ import User from "../models/userModel.js";
 import Car from "../models/carModel.js";
 import fs from "fs";
 import imagekit from "../config/imageKit.js";
+import Booking from "../models/bookingModel.js";
 
 export const changeRoleToOwner = async (req, res) => {
   try {
@@ -123,6 +124,69 @@ export const getDashboardData = async (req, res) => {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
     const cars = await Car.find({ owner: _id });
+    const bookings = await Booking.find({ owner: _id })
+      .populate("car")
+      .sort({ createdAt: -1 });
+    const pendingBookings = await Booking.find({
+      owner: _id,
+      status: "pending",
+    });
+    const completedBookings = await Booking.find({
+      owner: _id,
+      status: "completed",
+    });
+    const monthlyRevenue = bookings
+      .slice()
+      .filter((booking) => booking.status === "confirmed")
+      .reduce((acc, booking) => acc + booking.price, 0);
+    const dashboardData = {
+      totalCars: cars.length,
+      totalBookings: bookings.length,
+      pendingBookings: pendingBookings.length,
+      completedBookings: completedBookings.length,
+      recentBookings: bookings.slice(0, 5),
+      monthlyRevenue,
+    };
+
+    res.json({ success: true, dashboardData });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export const updateUserImage = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const imageFile = req.file;
+
+    if (!imageFile) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Image file is missing" });
+    }
+    const fileBuffer = fs.readFileSync(imageFile.path);
+    const response = await imagekit.upload({
+      file: fileBuffer,
+      fileName: imageFile.originalname,
+      folder: "/users",
+    });
+
+    // optimization through imagekit URL trasformation
+    var optimizedImageUrl = imagekit.url({
+      path: response.filePath,
+      urlEndpoint: "https://ik.imagekit.io/your_imagekit_id/endpoint/",
+      transformation: [
+        { width: "400" },
+        { quality: "auto" },
+        { format: "webp" },
+      ],
+    });
+
+    const image = optimizedImageUrl;
+
+    await User.findByIdAndUpdate(_id, { image });
+    res.json({ success: true, message: "Image updated successfully" });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
