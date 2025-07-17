@@ -4,35 +4,69 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
+// Set base URL
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
-// 1. Define the context value type
-interface AppContextType {
-  // Add your context values here, example:
-  // user: User | null;
+// ✅ Define types
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: "user" | "owner";
+  // add other fields as needed
 }
 
-// 2. Create the context with an initial value
-export const AppContext = createContext<AppContextType | undefined>(undefined);
+interface Car {
+  _id: string;
+  brand: string;
+  model: string;
+  price: number;
+  available: boolean;
+  // add other fields as needed
+}
 
-// 3. Define the props type for the provider
+interface AppContextType {
+  navigate: ReturnType<typeof useNavigate>;
+  currency: string;
+  token: string | null;
+  setToken: React.Dispatch<React.SetStateAction<string | null>>;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  isOwner: boolean;
+  setIsOwner: React.Dispatch<React.SetStateAction<boolean>>;
+  showLogin: boolean;
+  setShowLogin: React.Dispatch<React.SetStateAction<boolean>>;
+  pickupDate: string;
+  setPickupDate: React.Dispatch<React.SetStateAction<string>>;
+  returnDate: string;
+  setReturnDate: React.Dispatch<React.SetStateAction<string>>;
+  cars: Car[];
+  setCars: React.Dispatch<React.SetStateAction<Car[]>>;
+  fetchCars: () => Promise<void>;
+  logout: () => void;
+  axios: typeof axios;
+  fetchUser: () => Promise<void>;
+}
+
 interface AppProviderProps {
   children: ReactNode;
 }
 
-// 4. Create the provider component
+// ✅ Create context
+export const AppContext = createContext<AppContextType | undefined>(undefined);
+
+// ✅ AppProvider component
 export const AppProvider = ({ children }: AppProviderProps) => {
   const navigate = useNavigate();
   const currency = import.meta.env.VITE_CURRENCY;
   const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isOwner, setIsOwner] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [pickupDate, setPickupDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
-  const [cars, setCars] = useState([]);
+  const [cars, setCars] = useState<Car[]>([]);
 
-  //function to check if user is logged in
   const fetchUser = async () => {
     try {
       const { data } = await axios.get("/api/user/data");
@@ -43,11 +77,11 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         navigate("/");
       }
     } catch (error: unknown) {
-      const err = error as any; // or `as AxiosError`
+      const err = error as any;
       toast.error(err.response?.data?.message || "Something went wrong");
     }
   };
-  //function to fetch all cars from the server
+
   const fetchCars = async () => {
     try {
       const { data } = await axios.get("/api/user/cars");
@@ -55,31 +89,32 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         setCars(data.cars);
       }
     } catch (error: unknown) {
-      const err = error as any; // or `as AxiosError`
+      const err = error as any;
       toast.error(err.response?.data?.message || "Something went wrong");
     }
   };
-  // function to logout the user
-  const logout = ()=>{
+
+  const logout = () => {
     localStorage.removeItem("token");
-    setToken(null)
-    setUser(null)
-    setIsOwner(false)
-     axios.defaults.headers.common["Authorization"] = ``;
-     toast.success("Logged out successfully");
-  }
-  // useeffect to retrieve the token from local storage
+    setToken(null);
+    setUser(null);
+    setIsOwner(false);
+    delete axios.defaults.headers.common["Authorization"];
+    toast.success("Logged out successfully");
+  };
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setToken(token);
-    fetchCars()
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+    fetchCars();
   }, []);
+
   useEffect(() => {
     if (token) {
-      axios.defaults.headers.common["Authorization"] = `${token}`;
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       fetchUser();
     }
-  });
+  }, [token]);
 
   const contextValue: AppContextType = {
     navigate,
@@ -102,15 +137,20 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     logout,
     axios,
     fetchUser,
-
-    
   };
 
   return (
-    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
+    <AppContext.Provider value={contextValue}>
+      {children}
+    </AppContext.Provider>
   );
 };
 
+// ✅ Custom hook
 export const useAppContext = () => {
-  return useContext(AppContext);
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("useAppContext must be used within an AppProvider");
+  }
+  return context;
 };
