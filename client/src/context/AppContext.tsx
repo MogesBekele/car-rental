@@ -140,9 +140,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   };
 
   return (
-    <AppContext.Provider value={contextValue}>
-      {children}
-    </AppContext.Provider>
+    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   );
 };
 
@@ -153,4 +151,4 @@ export const useAppContext = () => {
     throw new Error("useAppContext must be used within an AppProvider");
   }
   return context;
-};
+}

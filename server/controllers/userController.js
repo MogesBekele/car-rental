@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import validator from "validator";
 import User from "../models/userModel.js";
+import Car from "../models/carModel.js";
+
 
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET);
@@ -79,4 +81,16 @@ const getUserData = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, getUserData };
+// get all cars for the frontend
+
+const getCars = async (req, res) => {
+  try {
+    const cars = await Car.find({isAvaliable: true});
+    res.json({ success: true, cars });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export { registerUser, loginUser, getUserData, getCars };

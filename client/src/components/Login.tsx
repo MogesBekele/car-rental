@@ -1,10 +1,12 @@
 
 import { useState } from "react";
-const Login = ({ setShowLogin }: { setShowLogin: (show: boolean) => void }) => {
+import { useAppContext } from "../context/AppContext";
+const Login = () => {
   const [state, setState] = useState<"login" | "register">("login");
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const {setShowLogin, setToken, axios} = useAppContext()
 
 const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
