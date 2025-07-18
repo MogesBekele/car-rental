@@ -39,7 +39,7 @@ export const addCar = async (req, res) => {
     // optimization through imagekit URL trasformation
     var optimizedImageUrl = imagekit.url({
       path: response.filePath,
-      urlEndpoint: "https://ik.imagekit.io/your_imagekit_id/endpoint/",
+      urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
       transformation: [
         { width: "1280" },
         { quality: "auto" },
@@ -175,7 +175,7 @@ export const updateUserImage = async (req, res) => {
     // optimization through imagekit URL trasformation
     var optimizedImageUrl = imagekit.url({
       path: response.filePath,
-      urlEndpoint: "https://ik.imagekit.io/your_imagekit_id/endpoint/",
+      urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
       transformation: [
         { width: "400" },
         { quality: "auto" },
