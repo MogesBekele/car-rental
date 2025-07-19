@@ -82,7 +82,8 @@ export const toggleCarAvailability = async (req, res) => {
     if (car.owner.toString() !== _id.toString()) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
-    car.available = !car.available;
+ car.isAvailable = !car.isAvailable;
+
     await car.save();
     res.json({
       success: true,
@@ -119,7 +120,7 @@ export const deleteCar = async (req, res) => {
 
 export const getDashboardData = async (req, res) => {
   try {
-    const { _id } = req.user;
+    const { _id, role } = req.user;
     if (role !== "owner") {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }

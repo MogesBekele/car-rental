@@ -1,7 +1,9 @@
 import { useState } from "react";
 import Title from "../../components/owner/Title";
 import { assets } from "../../assets/assets";
-import axios from "axios";
+import { useAppContext } from "../../context/AppContext";
+import { data } from "react-router-dom";
+import toast from "react-hot-toast";
 
 type CarDetails = {
   brand: string;
@@ -17,8 +19,8 @@ type CarDetails = {
 };
 
 const AddCar = () => {
+  const { axios, currency } = useAppContext();
   const [image, setImage] = useState<File | null>(null);
-  const currency = import.meta.env.VITE_CURRENCY || "$";
   const [car, setCar] = useState<CarDetails>({
     brand: "",
     model: "",
@@ -33,61 +35,46 @@ const AddCar = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!image) {
-      alert("Please upload a car image.");
-      return;
+    if (loading) {
+      return null;
     }
-
     setLoading(true);
-    setError(null);
-    setSuccessMessage(null);
 
     try {
       const formData = new FormData();
-      formData.append("image", image);
-
+      formData.append("image" , image!);
       // Append all car details
       formData.append("carData", JSON.stringify(car));
 
-      const token = localStorage.getItem("token");
-
-      const response = await axios.post(
+      const { data } = await axios.post(
         "http://localhost:3000/api/owner/add-Car",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        formData
       );
 
-      setSuccessMessage("Car listed successfully!");
-      setCar({
-        brand: "",
-        model: "",
-        year: 0,
-        pricePerDay: 0,
-        category: "",
-        transmission: "",
-        fuel_type: "",
-        seating_capacity: 0,
-        location: "",
-        description: "",
-      });
-      setImage(null);
-      console.log("Response:", response.data);
-    } catch (error: any) {
-      setError(
-        error.response?.data?.message || "Failed to list car. Try again."
-      );
-      console.error("Error listing car:", error);
+      if (data.success) {
+        toast.success(data.message);
+        setImage(null);
+        setCar({
+          brand: "",
+          model: "",
+          year: 0,
+          pricePerDay: 0,
+          category: "",
+          transmission: "",
+          fuel_type: "",
+          seating_capacity: 0,
+          location: "",
+          description: "",
+        });
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      const err = error as any;
+      toast.error(err.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -273,8 +260,7 @@ const AddCar = () => {
           />
         </div>
 
-        {error && <p className="text-red-600">{error}</p>}
-        {successMessage && <p className="text-green-600">{successMessage}</p>}
+    
 
         <button
           type="submit"
