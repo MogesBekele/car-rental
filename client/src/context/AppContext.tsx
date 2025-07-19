@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import type { Car } from "../types/DataType";
 
 // Set base URL
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
@@ -13,15 +14,6 @@ interface User {
   name: string;
   email: string;
   role: "user" | "owner";
-  // add other fields as needed
-}
-
-interface Car {
-  _id: string;
-  brand: string;
-  model: string;
-  price: number;
-  available: boolean;
   // add other fields as needed
 }
 
@@ -106,13 +98,13 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     setToken(storedToken);
-    fetchCars();
   }, []);
 
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       fetchUser();
+      fetchCars();
     }
   }, [token]);
 
@@ -151,4 +143,4 @@ export const useAppContext = () => {
     throw new Error("useAppContext must be used within an AppProvider");
   }
   return context;
-}
+};
