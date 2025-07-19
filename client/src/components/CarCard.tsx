@@ -1,14 +1,14 @@
-import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
+import { useAppContext } from "../context/AppContext";
 import type { Car } from "../types/DataType";
 
-export type CarCardProps = {
+interface CarCardProps {
   car: Car;
-};
+}
 
 const CarCard = ({ car }: CarCardProps) => {
-  const currency = import.meta.env.VITE_CURRENCY;
-  const navigate = useNavigate();
+  const { currency, navigate } = useAppContext();
+
   return (
     <div
       onClick={() => {
