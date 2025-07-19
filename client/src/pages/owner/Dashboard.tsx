@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { assets, dummyDashboardData } from "../../assets/assets";
+import { assets} from "../../assets/assets";
 import Title from "../../components/owner/Title";
 import type { DashboardData } from "../../types/DataType";
+import { useAppContext } from "../../context/AppContext";
+import toast from "react-hot-toast";
 
 // 1. Define the type
 
@@ -11,7 +13,8 @@ type Card = {
   icon: string;
 };
 const Dashboard = () => {
-  const currency = import.meta.env.VITE_CURRENCY;
+ 
+  const {axios, isOwner, currency} = useAppContext()
   // 2. Type your state
   const [data, setData] = useState<DashboardData>({
     totalCars: 0,
@@ -45,9 +48,25 @@ const Dashboard = () => {
     },
   ];
 
+  const fetchDashboardData = async ()=>{
+  try {
+    const {data}= await axios.get('/api/owner/dashboard')
+    if(data.success){
+      setData(data.dashboardData)
+    }else{
+      toast.error(data.message)
+    }
+  } catch (error) {
+    const err = error as any;
+    toast.error(err.response?.data?.message || "Something went wrong");
+    
+  }
+
+  }
+
   useEffect(() => {
-    setData(dummyDashboardData);
-  }, []);
+    fetchDashboardData()
+  }, [isOwner]);
 
   return (
     <div className="px-4 pt-10 md:px-10 flex-1">
