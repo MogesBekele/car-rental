@@ -3,32 +3,49 @@ import Car from "../models/carModel.js";
 
 export const checkAvailability = async (car, pickupDate, returnDate) => {
   const bookings = await Booking.find({
-  car,
-  $or: [
-    { pickupDate: { $lt: returnDate }, returnDate: { $gt: pickupDate } }
-  ]
-});
+    car,
+    $or: [{ pickupDate: { $lt: returnDate }, returnDate: { $gt: pickupDate } }],
+  });
 
   return bookings.length === 0;
 };
 
 //API to check Availability of cars for the given date and loncation
+
 export const checkAvailabilityOfCars = async (req, res) => {
   try {
     const { location, pickupDate, returnDate } = req.body;
+
+    console.log("Search Params:", { location, pickupDate, returnDate });
+
+    // Step 1: Find cars matching the location and marked as available
     const cars = await Car.find({ location, isAvailable: true });
 
+    console.log("Cars matching location and availability:", cars.length);
+
+    // Step 2: Check booking conflicts for each car
     const availableCarsPromises = cars.map(async (car) => {
-      const isAvailable = await checkAvailability(car._id, pickupDate, returnDate);
+      const isAvailable = await checkAvailability(
+        car._id,
+        pickupDate,
+        returnDate
+      );
+      console.log(`Car ${car._id} isAvailable:`, isAvailable);
       return { ...car.toObject(), isAvailable };
     });
 
     let availableCars = await Promise.all(availableCarsPromises);
+
+    // Step 3: Filter only those truly available in the given date range
     availableCars = availableCars.filter((car) => car.isAvailable);
-    res.json({ success: true, availableCars });
+
+    console.log("Available cars after filtering:", availableCars.length);
+
+    // Step 4: Send response with correctly cased key
+    res.json({ success: true, AvailableCars: availableCars });
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: error.message });
+    console.error("Error checking availability:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
