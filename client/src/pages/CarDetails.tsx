@@ -1,28 +1,52 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { assets, dummyCarData } from "../assets/assets";
+import { useParams } from "react-router-dom";
+import { assets } from "../assets/assets";
 import { useEffect, useState } from "react";
-import type { Car } from "../components/CarCard";
+import type { Car } from "../types/DataType";
 import Loading from "../components/Loading";
+import { useAppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
 
 const CarDetails = () => {
   const { id } = useParams<{ id: string }>();
+  const {
+    cars,
+    axios,
+    pickupDate,
+    setPickupDate,
+    returnDate,
+    setReturnDate,
+    navigate,
+    currency,
+  } = useAppContext();
   const [car, setCar] = useState<Car | null>(null);
-  const navigate = useNavigate();
-  const currency = import.meta.env.VITE_CURRENCY;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    // Handle booking logic here
-    alert("Booking successful!");
+    // You can add your subscribe logic here
+    try {
+      const {data} = await axios.post('/api/bookings/create',{
+        car: id,
+        pickupDate,
+        returnDate
+      })
+      if(data.success){
+        toast.success(data.message)
+        navigate('/my-bookings')
+      }else{
+        toast.error(data.message)
+      }
+    } catch (error) {
+      const err = error as any;
+      toast.error(err.response?.data?.message || "Something went wrong");
+      
+    }
+
   };
 
-useEffect(() => {
-  const timer = setTimeout(() => {
-    setCar(dummyCarData.find((c) => c._id === id) || null);
-  }, 1200); // 1.2 seconds delay to show loading
-
-  return () => clearTimeout(timer);
-}, [id]);
+  useEffect(() => {
+    const foundCar = cars.find((car) => car._id === id);
+    setCar(foundCar ?? null); // if undefined, set null
+  }, [id, cars]);
 
   return car ? (
     <div className="px-6 md:px-16 lg:px-24 xl:px-32 mt-16">
@@ -95,7 +119,10 @@ useEffect(() => {
         </div>
 
         {/* booking form */}
-        <form onSubmit={handleSubmit} className="shadow-lg h-max sticky top-18 rounded-xl p-6 space-y-6 text-gray-500">
+        <form
+          onSubmit={handleSubmit}
+          className="shadow-lg h-max sticky top-18 rounded-xl p-6 space-y-6 text-gray-500"
+        >
           <p className="flex items-center justify-between text-2xl text-gray-800 font-semibold">
             {currency}
             {car.pricePerDay}{" "}
@@ -107,6 +134,8 @@ useEffect(() => {
           <div className="flex flex-col gap-2">
             <label htmlFor="pickup-date">Pickup date</label>
             <input
+              value={pickupDate}
+              onChange={(e) => setPickupDate(e.target.value)}
               type="date"
               id="pickup-date"
               className="border border-borderColor px-3 py-2 rounded-lg"
@@ -117,14 +146,20 @@ useEffect(() => {
           <div className="flex flex-col gap-2">
             <label htmlFor="return-date">Return date</label>
             <input
+              value={returnDate}
+              onChange={(e) => setReturnDate(e.target.value)}
               type="date"
               id="return-date"
               className="border border-borderColor px-3 py-2 rounded-lg"
               required
             />
           </div>
-          <button className="w-full bg-primary text-white py-3 rounded-xl hover:bg-primary-dull font-medium transition-all cursor-pointer">Book Now</button>
-          <p className="text-sm text-center">No credit card required to reserve</p>
+          <button className="w-full bg-primary text-white py-3 rounded-xl hover:bg-primary-dull font-medium transition-all cursor-pointer">
+            Book Now
+          </button>
+          <p className="text-sm text-center">
+            No credit card required to reserve
+          </p>
         </form>
       </div>
     </div>

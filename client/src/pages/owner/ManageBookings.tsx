@@ -21,22 +21,24 @@ const ManageBookings = () => {
     }
   };
 
-  const changeBookingStatus = async (bookingId: string, status: string) => {
-    try {
-      const { data } = await axios.get("/api/bookings/owner", {
-        params: { bookingId, status },
-      });
-      if (data.success) {
-        toast.success(data.message);
-        fetchOwnerBookings();
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      const err = error as any;
-      toast.error(err.response?.data?.message || "Something went wrong");
+const changeBookingStatus = async (bookingId: string, status: string) => {
+  try {
+    const { data } = await axios.post("/api/bookings/change-status", {
+      bookingId,
+      status,
+    });
+    if (data.success) {
+      toast.success(data.message);
+      fetchOwnerBookings(); // Refresh bookings
+    } else {
+      toast.error(data.message);
     }
-  };
+  } catch (error) {
+    const err = error as any;
+    toast.error(err.response?.data?.message || "Something went wrong");
+  }
+};
+
   useEffect(() => {
     fetchOwnerBookings();
   }, []);

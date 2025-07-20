@@ -1,5 +1,6 @@
 import Booking from "../models/bookingModel.js";
 import Car from "../models/carModel.js";
+import User from "../models/userModel.js";
 
 export const checkAvailability = async (car, pickupDate, returnDate) => {
   const bookings = await Booking.find({
@@ -16,12 +17,8 @@ export const checkAvailabilityOfCars = async (req, res) => {
   try {
     const { location, pickupDate, returnDate } = req.body;
 
-    console.log("Search Params:", { location, pickupDate, returnDate });
-
     // Step 1: Find cars matching the location and marked as available
     const cars = await Car.find({ location, isAvailable: true });
-
-    console.log("Cars matching location and availability:", cars.length);
 
     // Step 2: Check booking conflicts for each car
     const availableCarsPromises = cars.map(async (car) => {
@@ -30,7 +27,7 @@ export const checkAvailabilityOfCars = async (req, res) => {
         pickupDate,
         returnDate
       );
-      console.log(`Car ${car._id} isAvailable:`, isAvailable);
+
       return { ...car.toObject(), isAvailable };
     });
 
@@ -38,8 +35,6 @@ export const checkAvailabilityOfCars = async (req, res) => {
 
     // Step 3: Filter only those truly available in the given date range
     availableCars = availableCars.filter((car) => car.isAvailable);
-
-    console.log("Available cars after filtering:", availableCars.length);
 
     // Step 4: Send response with correctly cased key
     res.json({ success: true, AvailableCars: availableCars });

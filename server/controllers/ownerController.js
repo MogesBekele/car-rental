@@ -117,34 +117,40 @@ export const deleteCar = async (req, res) => {
 };
 
 // api to get dashboard data
-
 export const getDashboardData = async (req, res) => {
   try {
     const { _id, role } = req.user;
+
     if (role !== "owner") {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
+
     const cars = await Car.find({ owner: _id });
+
     const bookings = await Booking.find({ owner: _id })
       .populate("car")
       .sort({ createdAt: -1 });
+
     const pendingBookings = await Booking.find({
       owner: _id,
       status: "pending",
     });
-    const completedBookings = await Booking.find({
+
+    const confirmedBookings = await Booking.find({
       owner: _id,
-      status: "completed",
+      status: "confirmed", // ✅ fixed here
     });
-    const monthlyRevenue = bookings
-      .slice()
-      .filter((booking) => booking.status === "confirmed")
-      .reduce((acc, booking) => acc + booking.price, 0);
+
+    const monthlyRevenue = confirmedBookings.reduce(
+      (acc, booking) => acc + booking.price,
+      0
+    );
+
     const dashboardData = {
       totalCars: cars.length,
       totalBookings: bookings.length,
       pendingBookings: pendingBookings.length,
-      completedBookings: completedBookings.length,
+      completedBookings: confirmedBookings.length, // ✅ renamed here
       recentBookings: bookings.slice(0, 5),
       monthlyRevenue,
     };
