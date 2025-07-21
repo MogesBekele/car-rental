@@ -8,28 +8,25 @@ import toast from "react-hot-toast";
 // Define types
 
 const MyBookings = () => {
-  const {currency, user, axios} = useAppContext()
+  const { currency, user, axios } = useAppContext();
   const [bookings, setBookings] = useState<Booking[]>([]);
-
 
   const fetchBookings = async () => {
     try {
-      const {data} = await axios.get('/api/bookings/user')
-      if(data.success){
-        setBookings(data.bookings)
-      }else{
-        toast.error(data.message)
+      const { data } = await axios.get("/api/bookings/user");
+      if (data.success) {
+        setBookings(data.bookings);
+      } else {
+        toast.error(data.message);
       }
     } catch (error) {
       const err = error as any;
       toast.error(err.response?.data?.message || "Something went wrong");
-      
     }
-  
   };
 
   useEffect(() => {
-   user && fetchBookings();
+    user && fetchBookings();
   }, [user]);
 
   return (

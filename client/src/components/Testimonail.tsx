@@ -1,5 +1,6 @@
 import { assets } from "../assets/assets";
 import Title from "./Title";
+import {motion} from 'motion/react'
 
 // 1. Define the type
 type Testimonial = {
@@ -42,7 +43,13 @@ const Testimonail = () => {
         subTitle="Discover what our satisfied customers have to say about our exceptional service."
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-18">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.6, ease: "easeInOut" }}
+        viewport={{ once: true, amount: 0.3 }}
+      
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-18">
         {testimonials.map((testimonial, index) => (
           <div
             key={index}
@@ -71,7 +78,7 @@ const Testimonail = () => {
             </p>
           </div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 };
