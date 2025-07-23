@@ -23,7 +23,7 @@ const Hero = () => {
       initial={{ opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="pt-24 h-screen flex flex-col items-center justify-center gap-14 bg-light text-center"
+      className="pt-24 min-h-screen flex flex-col items-center justify-center gap-14 bg-light text-center"
     >
       <motion.h1
         initial={{ y: 50, opacity: 0 }}

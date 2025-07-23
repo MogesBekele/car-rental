@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Booking } from "../../types/DataType";
 import Title from "../../components/owner/Title";
-import { assets } from "../../assets/assets";
+
 import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
 
@@ -21,23 +21,23 @@ const ManageBookings = () => {
     }
   };
 
-const changeBookingStatus = async (bookingId: string, status: string) => {
-  try {
-    const { data } = await axios.post("/api/bookings/change-status", {
-      bookingId,
-      status,
-    });
-    if (data.success) {
-      toast.success(data.message);
-      fetchOwnerBookings(); // Refresh bookings
-    } else {
-      toast.error(data.message);
+  const changeBookingStatus = async (bookingId: string, status: string) => {
+    try {
+      const { data } = await axios.post("/api/bookings/change-status", {
+        bookingId,
+        status,
+      });
+      if (data.success) {
+        toast.success(data.message);
+        fetchOwnerBookings(); // Refresh bookings
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      const err = error as any;
+      toast.error(err.response?.data?.message || "Something went wrong");
     }
-  } catch (error) {
-    const err = error as any;
-    toast.error(err.response?.data?.message || "Something went wrong");
-  }
-};
+  };
 
   useEffect(() => {
     fetchOwnerBookings();
@@ -91,7 +91,9 @@ const changeBookingStatus = async (bookingId: string, status: string) => {
                 <td className="p-3">
                   {booking.status === "pending" ? (
                     <select
-                    onChange={(e) => changeBookingStatus(booking._id, e.target.value)}
+                      onChange={(e) =>
+                        changeBookingStatus(booking._id, e.target.value)
+                      }
                       value={booking.status}
                       className="px-2 py-1.5 text-gray-500 border border-borderColor rounded-md outline-none
                     "

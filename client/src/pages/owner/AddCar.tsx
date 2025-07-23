@@ -2,7 +2,7 @@ import { useState } from "react";
 import Title from "../../components/owner/Title";
 import { assets } from "../../assets/assets";
 import { useAppContext } from "../../context/AppContext";
-import { data } from "react-router-dom";
+
 import toast from "react-hot-toast";
 
 type CarDetails = {

@@ -14,7 +14,7 @@ interface User {
   name: string;
   email: string;
   role: "user" | "owner";
-  // add other fields as needed
+  image?: string;
 }
 
 interface AppContextType {
