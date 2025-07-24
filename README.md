@@ -1,4 +1,4 @@
-live now: https://car-rental-client-tau.vercel.app/
+live now: https://car-rental-ribo.vercel.app/
 
 => imagekit https://imagekit.io/ for image storage
 
