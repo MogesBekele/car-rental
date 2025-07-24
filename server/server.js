@@ -12,7 +12,13 @@ const app = express();
 //database connection
 connectDB();
 //middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://car-rental-client-tau.vercel.app", // replace with your actual deployed frontend URL
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 //routes
