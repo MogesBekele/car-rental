@@ -95,27 +95,18 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     toast.success("Logged out successfully");
   };
 
-  // useEffect(() => {
-  //   const storedToken = localStorage.getItem("token");
-  //   setToken(storedToken);
-  // }, []);
-
-  // useEffect(() => {
-  //   if (token) {
-  //     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  //     fetchUser();
-  //     fetchCars();
-  //   }
-  // }, [token]);
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      setToken(storedToken);
-      axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
+    setToken(storedToken);
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       fetchUser();
       fetchCars();
     }
-  }, []);
+  }, [token]);
 
   const contextValue: AppContextType = {
     navigate,
