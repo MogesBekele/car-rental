@@ -1,6 +1,6 @@
 => live now: https://car-rentall.onrender.com/
 
-=> deployed in render.com
+=> deployed in https://render.com/
 
 => imagekit https://imagekit.io/ for image storage
 
