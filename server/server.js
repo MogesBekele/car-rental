@@ -12,7 +12,33 @@ const app = express();
 //database connection
 connectDB();
 //middleware
-app.use(cors({ origin: "*" })); // Just for development
+
+
+const whitelist = [
+  "http://localhost:5173",             // local dev frontend URL (Vite default)
+  "https://car-rentall.onrender.com",  // your production frontend URL
+];
+
+// Dynamically set origin based on request origin
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) {
+      // allow REST tools like Postman or server-to-server requests without origin
+      return callback(null, true);
+    }
+    if (whitelist.indexOf(origin) !== -1) {
+      // origin is allowed
+      callback(null, true);
+    } else {
+      // origin is not allowed
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 
 app.use(express.json());
 
