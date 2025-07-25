@@ -1,4 +1,6 @@
-live now: https://car-rental-ribo.vercel.app/
+=> live now: https://car-rentall.onrender.com/
+
+=> deployed in https://render.com/
 
 => imagekit https://imagekit.io/ for image storage
 
