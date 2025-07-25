@@ -12,7 +12,10 @@ const app = express();
 //database connection
 connectDB();
 //middleware
-app.use(cors());
+app.use(cors({
+  origin: "https://car-rental-1-mqho.onrender.com",
+  credentials: true,
+}));
 app.use(express.json());
 
 //routes
