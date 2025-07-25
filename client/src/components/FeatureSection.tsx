@@ -39,7 +39,7 @@ const FeatureSection = () => {
             transition={{ duration: 0.4, ease: "easeInOut" }}
             key={car._id}
           >
-            <CarCard car={car} />.95
+            <CarCard car={car} />
           </motion.div>
         ))}
       </motion.div>
