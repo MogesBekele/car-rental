@@ -8,6 +8,8 @@
 
 => context api for state management
 
+=> react router for routing
+
 => typescript for frontend and javascript in backend
 
 => nodejs with express in backend
