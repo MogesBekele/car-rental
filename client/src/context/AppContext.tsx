@@ -6,7 +6,11 @@ import { useNavigate } from "react-router-dom";
 import type { Car } from "../types/DataType";
 
 // Set base URL
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+
+axios.defaults.baseURL = import.meta.env.PROD
+  ? (import.meta.env.VITE_BASE_URL || "https://car-rental-bffr.onrender.com")
+  : "http://localhost:3000";
+
 
 // ✅ Define types
 interface User {
@@ -101,10 +105,15 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   }, []);
 
   useEffect(() => {
+    fetchCars();
+
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       fetchUser();
-      fetchCars();
+    } else {
+      delete axios.defaults.headers.common["Authorization"]; // remove auth header if no token
+      setUser(null);
+      setIsOwner(false);
     }
   }, [token]);
 
