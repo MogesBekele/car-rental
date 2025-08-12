@@ -25,8 +25,9 @@ const Sidebar = () => {
       } else {
         toast.error(data.message);
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Something went wrong");
+    } catch (error) {
+      console.error("Error updating image:", error);
+      toast.error("Failed to update image. Please try again later.");
     }
   };
 

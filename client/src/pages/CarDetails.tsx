@@ -37,9 +37,8 @@ const CarDetails = () => {
         toast.error(data.message)
       }
     } catch (error) {
-      const err = error as any;
-      toast.error(err.response?.data?.message || "Something went wrong");
-      
+      console.error("Error creating booking:", error);
+      toast.error("Failed to create booking. Please try again later.");
     }
 
   };

@@ -69,8 +69,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         navigate("/");
       }
     } catch (error: unknown) {
-      const err = error as any;
-      toast.error(err.response?.data?.message || "Something went wrong");
+      console.error("Error fetching user data:", error);
+      toast.error("Something went wrong");
     }
   };
 
@@ -81,8 +81,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         setCars(data.cars);
       }
     } catch (error: unknown) {
-      const err = error as any;
-      toast.error(err.response?.data?.message || "Something went wrong");
+      console.error("Error fetching cars:", error);
+      toast.error("Failed to fetch cars");
     }
   };
 
@@ -101,10 +101,15 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   }, []);
 
   useEffect(() => {
+    fetchCars();
+
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       fetchUser();
-      fetchCars();
+    } else {
+      delete axios.defaults.headers.common["Authorization"]; // remove auth header if no token
+      setUser(null);
+      setIsOwner(false);
     }
   }, [token]);
 
