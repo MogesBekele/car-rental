@@ -18,4 +18,4 @@
 
 => RESTful API
 
-=> jsonwtoken for autetication
+=> jsonwtoken for autentication and autorizations
