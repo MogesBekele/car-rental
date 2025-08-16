@@ -85,8 +85,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         setCars(data.cars);
       }
     } catch (error: unknown) {
-      const err = error as any;
-      toast.error(err.response?.data?.message || "Something went wrong");
+     toast.error('something went wrong in api calls')
+     console.log(error)
     }
   };
 
