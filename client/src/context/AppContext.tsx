@@ -8,8 +8,9 @@ import type { Car } from "../types/DataType";
 // Set base URL
 
 axios.defaults.baseURL = import.meta.env.PROD
-  ? import.meta.env.VITE_BASE_URL || "https://car-rental-bffr.onrender.com"
+  ? (import.meta.env.VITE_BASE_URL || "https://car-rental-bffr.onrender.com")
   : "http://localhost:3000";
+
 
 // ✅ Define types
 interface User {
@@ -84,8 +85,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         setCars(data.cars);
       }
     } catch (error: unknown) {
-      toast.error("something went wrong in api calls");
-      console.log(error);
+     toast.error('something went wrong in api calls')
+     console.log(error)
     }
   };
 
